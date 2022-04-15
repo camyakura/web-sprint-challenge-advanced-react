@@ -50,6 +50,34 @@ export default function AppFunctional(props) {
     }
   }
 
+  const moveDown = () => {
+    if(y < 3){
+      setY(y + 1)
+      setSteps(steps + 1)
+      setMessage('')
+    } else {
+      setMessage("You can't go down")
+    }
+  }
+
+  const moveUp = () => {
+    if(y > 1){
+      setY(y - 1)
+      setSteps(steps + 1)
+      setMessage('')
+    } else {
+      setMessage("You can't go up")
+    }
+  }
+
+  const reset = () => {
+    setX(initialValues.x)
+    setY(initialValues.y)
+    setSteps(initialValues.steps)
+    setMessage(initialValues.message)
+    setEmail(initialValues.email)
+  }
+
   const setLocation = () => {
     grid.map(array => {
       if(array[0] === x && array[1] === y){
@@ -88,10 +116,10 @@ export default function AppFunctional(props) {
       </div>
       <div id="keypad">
         <button id="left" onClick={moveLeft}>LEFT</button>
-        <button id="up">UP</button>
+        <button id="up" onClick={moveUp}>UP</button>
         <button id="right" onClick={moveRight}>RIGHT</button>
-        <button id="down">DOWN</button>
-        <button id="reset">reset</button>
+        <button id="down" onClick={moveDown}>DOWN</button>
+        <button id="reset" onClick={reset}>reset</button>
       </div>
       <form>
         <input id="email" type="email" placeholder="type email"></input>
