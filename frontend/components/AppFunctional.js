@@ -92,6 +92,30 @@ export default function AppFunctional(props) {
 
   setLocation()
 
+const postEmail = () => {
+  axios.post(URL, { "x": x, "y": y, "steps": steps, "email": email })
+    .then(res => {
+      setMessage(res.data.message)
+      setEmail(email)
+    })
+    .catch(err => {
+      setMessage(err.response.data.message)
+    })
+    .finally(() => {
+      setEmail('')
+    })
+}
+
+const emailInputChange = evt => {
+  const {value} = evt.target
+  setEmail(value)
+}
+
+const onEmailSubmit = evt => {
+  evt.preventDefault()
+  postEmail()
+}
+
   return (
     <div id="wrapper" className={props.className}>
       <div className="info">
@@ -122,8 +146,8 @@ export default function AppFunctional(props) {
         <button id="reset" onClick={reset}>reset</button>
       </div>
       <form>
-        <input id="email" type="email" placeholder="type email"></input>
-        <input id="submit" type="submit"></input>
+        <input id="email" type="email" placeholder="type email" onChange={emailInputChange} value={email}></input>
+        <input id="submit" type="submit" onClick={onEmailSubmit}></input>
       </form>
     </div>
   )
