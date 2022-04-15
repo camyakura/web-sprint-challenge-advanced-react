@@ -40,6 +40,16 @@ export default function AppFunctional(props) {
     }
   }
 
+  const moveRight = () => {
+    if(x < 3){
+      setX(x + 1)
+      setSteps(steps + 1)
+      setMessage('')
+    } else {
+      setMessage("You can't go right")
+    }
+  }
+
   const setLocation = () => {
     grid.map(array => {
       if(array[0] === x && array[1] === y){
@@ -57,8 +67,10 @@ export default function AppFunctional(props) {
   return (
     <div id="wrapper" className={props.className}>
       <div className="info">
-        <h3 id="coordinates">Coordinates (2, 2)</h3>
-        <h3 id="steps">You moved 0 times</h3>
+        <h3 id="coordinates">{`Coordinates (${x},${y})`}</h3>
+        {
+          steps === 1 ? <h3 id='steps'>You moved {steps} time</h3> : <h3 id='steps'>You moved {steps} times</h3>
+        }
       </div>
       <div id="grid">
         {
@@ -72,12 +84,12 @@ export default function AppFunctional(props) {
         }
       </div>
       <div className="info">
-        <h3 id="message"></h3>
+        <h3 id="message">{message}</h3>
       </div>
       <div id="keypad">
         <button id="left" onClick={moveLeft}>LEFT</button>
         <button id="up">UP</button>
-        <button id="right">RIGHT</button>
+        <button id="right" onClick={moveRight}>RIGHT</button>
         <button id="down">DOWN</button>
         <button id="reset">reset</button>
       </div>
