@@ -22,8 +22,6 @@ const initialValues = {
   message: '',
 }
 
-
-
 export default function AppFunctional(props) {
   const [x, setX] = useState(initialValues.x)
   const [y, setY] = useState(initialValues.y)
@@ -32,6 +30,30 @@ export default function AppFunctional(props) {
   const [message, setMessage] = useState(initialValues.message)
   const [grid, setGrid] = useState(initialValues.grid)
 
+  const moveLeft = () => {
+    if(x > 1){
+      setX(x - 1)
+      setSteps(steps + 1)
+      setMessage('')
+    } else {
+      setMessage("You can't go left")
+    }
+  }
+
+  const setLocation = () => {
+    grid.map(array => {
+      if(array[0] === x && array[1] === y){
+        array[2] = true
+        array[3] ='B'
+      } else {
+        array[2] = false
+        array[3] = null
+      }
+    })
+  }
+
+  setLocation()
+
   return (
     <div id="wrapper" className={props.className}>
       <div className="info">
@@ -39,21 +61,21 @@ export default function AppFunctional(props) {
         <h3 id="steps">You moved 0 times</h3>
       </div>
       <div id="grid">
-        <div className="square"></div>
-        <div className="square"></div>
-        <div className="square"></div>
-        <div className="square"></div>
-        <div className="square active">B</div>
-        <div className="square"></div>
-        <div className="square"></div>
-        <div className="square"></div>
-        <div className="square"></div>
+        {
+          grid.map((array, idx) => {
+            if(array[2] === true){
+              return ( <div className='square active' key={idx}>{array[3]}</div>)
+            } else {
+              return ( <div className='square' key={idx}>{array[3]}</div>)
+            }
+          })
+        }
       </div>
       <div className="info">
         <h3 id="message"></h3>
       </div>
       <div id="keypad">
-        <button id="left">LEFT</button>
+        <button id="left" onClick={moveLeft}>LEFT</button>
         <button id="up">UP</button>
         <button id="right">RIGHT</button>
         <button id="down">DOWN</button>
