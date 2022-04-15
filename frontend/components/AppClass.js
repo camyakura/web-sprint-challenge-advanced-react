@@ -100,21 +100,52 @@ export default class AppClass extends React.Component {
     })
   }
 
+  reset = () => {
+    this.setState(initialState)
+    this.setState({
+      message: ''
+    })
+  }
+
+  postEmail = () => {
+    const { x, y, steps, email } = this.state
+    axios.post(URL, { "x": x, "y": y, "steps": steps, "email": email })
+      .then(res => {
+        this.setState({
+          ...this.state, 
+          message: res.data.message,
+          email: ''
+        })
+      })
+      .catch(err => {
+        this.setState({message: err.response.data.message})
+      })
+  }
   
+  emailInputChange = evt => {
+    const {value} = evt.target
+    this.setState({...this.state, email: value})
+  }
+
+  onEmailSubmit = evt => {
+    evt.preventDefault()
+    this.postEmail()
+  }
 
   render() {
     const { className } = this.props
+    const { x, y, steps, grid, message, email } = this.state
     this.setLocation()
 
     return (
       <div id="wrapper" className={className}>
         <div className="info">
-          <h3 id="coordinates">{`Coordinates (${this.state.x},${this.state.y})`}</h3>
-          <h3 id="steps">You moved 0 times</h3>
+          <h3 id="coordinates">{`Coordinates (${x},${y})`}</h3>
+          { steps === 1 ? <h3 id='steps'>You moved {steps} time</h3> : <h3 id='steps'>You moved {steps} times</h3>}
         </div>
         <div id="grid">
           {
-            this.state.grid.map((array, idx) => {
+            grid.map((array, idx) => {
               if(array[2] === true){
                 return ( <div className='square active' key={idx}>{array[3]}</div>)
               } else {
@@ -125,18 +156,18 @@ export default class AppClass extends React.Component {
           
         </div>
         <div className="info">
-          <h3 id="message"></h3>
+          <h3 id="message">{message}</h3>
         </div>
         <div id="keypad">
           <button id="left" onClick={this.moveLeft}>LEFT</button>
           <button id="up" onClick={this.moveUp}>UP</button>
           <button id="right" onClick={this.moveRight}>RIGHT</button>
           <button id="down" onClick={this.moveDown}>DOWN</button>
-          <button id="reset">reset</button>
+          <button id="reset" onClick={this.reset}>reset</button>
         </div>
         <form>
-          <input id="email" type="email" placeholder="type email"></input>
-          <input id="submit" type="submit"></input>
+          <input id="email" type="email" placeholder="type email" onChange={this.emailInputChange} value={email}></input>
+          <input id="submit" type="submit" onClick={this.onEmailSubmit}></input>
         </form>
       </div>
     )
